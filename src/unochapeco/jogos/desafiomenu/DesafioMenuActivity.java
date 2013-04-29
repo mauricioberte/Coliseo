@@ -8,8 +8,6 @@
 package unochapeco.jogos.desafiomenu;
 
 //Pacotes utilizados
-import java.util.Random;
-
 import gameEngine.CGerenteEventos;
 import gameEngine.CGerenteGrafico;
 import gameEngine.CGerenteSons;
@@ -18,6 +16,9 @@ import gameEngine.CIntervaloTempo;
 import gameEngine.CNioBuffer;
 import gameEngine.CQuadro;
 import gameEngine.CSprite;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -101,11 +102,22 @@ class Renderizador implements Renderer {
 	CSprite vrSpriteJulius = null;
 	CSprite vrSpritechicotada = null;
 
-	// leoes
-	CSprite vrSpriteLeao3 = null;
-	CSprite vrQuadrosLeao3Desce = null;
-	CSprite vrQuadrosLeao3Sobe = null;
-	int iLeao3Estado = 0;
+	// // leoes
+	// CSprite vrSpriteLeao3 = null;
+	// CSprite vrQuadrosLeao3Desce = null;
+	// CSprite vrQuadrosLeao3Sobe = null;
+	//
+	// // CSprite vetLeosDesce[] = null;
+	// // CSprite vetLeosSobe[] = null;
+	// CSprite vetLeos[] = null;
+	// int iLeao0Estado = 0;
+	// int iLeao1Estado = 0;
+	// int iLeao2Estado = 0;
+	// int iLeao3Estado = 0;
+	// int iLeao4Estado = 0;
+
+	ArrayList<CSprite> vetLeoes = null;
+	CIntervaloTempo vrTempoCriacaoLeos = null;
 
 	// Metodo utilizado para armazenar uma referencia da activity
 	public void setActivity(Activity pActivity) {
@@ -255,26 +267,59 @@ class Renderizador implements Renderer {
 		vrSpriteJulius.criaAnimacao(1, true, vrQuadrosJuliusPara);
 		vrSpriteJulius.configuraAnimcaceoAtual(0);
 
-		// leao 3
-		CQuadro[] vrQuadrosLeao3Desce = new CQuadro[6];
-		for (int iIndex = 0; iIndex < 6; iIndex++) {
-			vrQuadrosLeao3Desce[iIndex] = new CQuadro(iIndex);
-		}
-		CQuadro[] vrQuadrosLeao3Sobe = new CQuadro[6];
-		for (int iIndex = 0; iIndex < 6; iIndex++) {
-			vrQuadrosLeao3Sobe[iIndex] = new CQuadro(iIndex + 6);
-		}
-
-		vrSpriteLeao3 = new CSprite(vrOpenGL, R.drawable.leao3, 72, 118, 432,
-				238);
-		vrSpriteLeao3.iPosX = iLargura / 2;
-		vrSpriteLeao3.iPosY = iAltura - 170;
-		vrSpriteLeao3.fEscalaX = 18;
-		vrSpriteLeao3.fEscalaY = 29;
-		vrSpriteLeao3.criaAnimacao(10, true, vrQuadrosLeao3Desce);
-		vrSpriteLeao3.criaAnimacao(30, true, vrQuadrosLeao3Sobe);
-		vrSpriteLeao3.configuraAnimcaceoAtual(0);
-		vrSpriteLeao3.fAlpha = 0;
+		// // leao 3
+		// CQuadro[] vrQuadrosLeao3Desce = new CQuadro[6];
+		// for (int iIndex = 0; iIndex < 6; iIndex++) {
+		// vrQuadrosLeao3Desce[iIndex] = new CQuadro(iIndex);
+		// }
+		// CQuadro[] vrQuadrosLeao3Sobe = new CQuadro[6];
+		// for (int iIndex = 0; iIndex < 6; iIndex++) {
+		// vrQuadrosLeao3Sobe[iIndex] = new CQuadro(iIndex + 6);
+		// }
+		//
+		// vrSpriteLeao3 = new CSprite(vrOpenGL, R.drawable.leao3, 72, 118, 432,
+		// 238);
+		// vrSpriteLeao3.iPosX = iLargura / 2;
+		// vrSpriteLeao3.iPosY = iAltura - 170;
+		// vrSpriteLeao3.fEscalaX = 18;
+		// vrSpriteLeao3.fEscalaY = 29;
+		// vrSpriteLeao3.criaAnimacao(10, true, vrQuadrosLeao3Desce);
+		// vrSpriteLeao3.criaAnimacao(30, true, vrQuadrosLeao3Sobe);
+		// vrSpriteLeao3.configuraAnimcaceoAtual(0);
+		// vrSpriteLeao3.fAlpha = 0;
+		//
+		// // Cria o vetor de sprites
+		// vetLeos = new CSprite[5];
+		// for (int i = 0; i < vetLeos.length; i++) {
+		// // // leao 3
+		// // CQuadro[] vrQuadrosLeao3Desce = new CQuadro[6];
+		// // for (int iIndex = 0; iIndex < 6; iIndex++) {
+		// // vrQuadrosLeao3Desce[iIndex] = new CQuadro(iIndex);
+		// // }
+		// // CQuadro[] vrQuadrosLeao3Sobe = new CQuadro[6];
+		// // for (int iIndex = 0; iIndex < 6; iIndex++) {
+		// // vrQuadrosLeao3Sobe[iIndex] = new CQuadro(iIndex + 6);
+		// // }
+		// vetLeos[i] = new CSprite(vrOpenGL, R.drawable.leao3, 72, 118, 432,
+		// 238);
+		// vetLeos[i].fEscalaX = 18;
+		// vetLeos[i].fEscalaY = 29;
+		// vetLeos[i].criaAnimacao(10, true, vrQuadrosLeao3Desce);
+		// vetLeos[i].criaAnimacao(30, true, vrQuadrosLeao3Sobe);
+		// vetLeos[i].configuraAnimcaceoAtual(0);
+		// vetLeos[i].fAlpha = 1;
+		// }
+		//
+		// vetLeos[0].iPosX = 0;
+		// vetLeos[0].iPosY = 500;
+		// vetLeos[1].iPosX = 130;
+		// vetLeos[1].iPosY = 500;
+		// vetLeos[2].iPosX = 280;
+		// vetLeos[2].iPosY = 500;
+		// vetLeos[3].iPosX = 430;
+		// vetLeos[3].iPosY = 500;
+		// vetLeos[4].iPosX = 580;
+		// vetLeos[4].iPosY = 500;
 
 		// Cria um Sprite com animacao
 		CQuadro[] vrQuadrosChicotada = new CQuadro[3];
@@ -316,6 +361,17 @@ class Renderizador implements Renderer {
 			vetBotoes[iIndex].fEscalaY = 21;
 			vetBotoes[iIndex].configuraAnimcaceoAtual(0);
 		}
+
+		vetLeoes = new ArrayList<CSprite>();
+
+		// Cria o objeto temporizador para criacao de asteroides e controle
+		// tempo de tiro
+		vrTempoCriacaoLeos = new CIntervaloTempo();
+		vrTempoCriacaoLeos.reiniciaTempo(1000);
+
+		// Cria o objeto randomizador
+		vrRand = new Random();
+
 	}
 
 	// Metodo chamado quempre que possivel para realizar o desenho grafico na
@@ -326,13 +382,13 @@ class Renderizador implements Renderer {
 
 		// Gerencia os estados do jogo
 		if (iEstado == ABERTURA) {
-			jogo();
+			abertura();
 		} else if (iEstado == MENU) {
 			menu();
 		} else if (iEstado == AJUDA) {
 			ajuda();
 		} else if (iEstado == JOGO) {
-			jogo();
+			JuliusAnda(vrOpenGL);
 		}
 
 		// Executa as etapas de um jogo
@@ -341,6 +397,129 @@ class Renderizador implements Renderer {
 
 		// Pausa no loop da aplicacao
 		pausa();
+	}
+
+	private void iniciaJogo(GL10 vrOpenGL) {
+		// Gerencia os asteroies
+		atualiLeoes(vrOpenGL);
+		// atualizaExplosoes();
+
+		// Atualiza jogador
+		// defineDirecaoJogador();
+		// atualizaPosicaoJogador();
+
+		// Desenha jogador
+		atualizatelaJogo();
+		atualizaPersonagem();
+		// vrNave.atualizaSprite();
+		// vrNave.desenhaSprite();
+
+		// Realiza o desenho
+
+		desenhaLeoes();
+
+		if (CGerenteEventos.vrEventosTouch.telaClicada() == true) {
+			vrSpritechicotada.iPosX = (int) CGerenteEventos.vrEventosTouch.fPosX;
+			vrSpritechicotada.iPosY = iAltura
+					- ((int) CGerenteEventos.vrEventosTouch.fPosY);
+			CGerenteSons.vrEfeitos.reproduzSom(1);
+			chicotada();
+		}
+	}
+
+	void desenhaLeoes() {
+		// Atualiza os sprites
+		for (int iIndex = 0; iIndex < vetLeoes.size(); iIndex++) {
+			vetLeoes.get(iIndex).atualizaSprite();
+			vetLeoes.get(iIndex).desenhaSprite();
+		}
+	}
+
+	// Cria um sprite de meteoro quando necessario
+	CSprite criaLeoes(GL10 vrOpenGL) {
+		CSprite vrLeoes = null;
+
+		CQuadro[] vrQuadrosLeaoDesce = new CQuadro[6];
+		 for (int iIndex = 0; iIndex < 6; iIndex++) {
+		 vrQuadrosLeaoDesce[iIndex] = new CQuadro(iIndex);
+		 }
+		 CQuadro[] vrQuadrosLeaoSobe = new CQuadro[6];
+		 for (int iIndex = 0; iIndex < 6; iIndex++) {
+		 vrQuadrosLeaoSobe[iIndex] = new CQuadro(iIndex + 6);
+		 }
+
+		// Cria o Sprite
+
+		vrLeoes = new CSprite(vrOpenGL, R.drawable.leao3, 72, 118, 432, 238);
+		int posicao = vrRand.nextInt(5);
+		switch (posicao) {
+		case 0:
+			vrLeoes.iPosX = iLargura-135;
+			break;
+		case 1:
+			vrLeoes.iPosX = 135;
+			break;
+		case 2:
+			vrLeoes.iPosX = 265;
+			break;
+		case 3:
+			vrLeoes.iPosX = 395;
+			break;
+		case 4:
+			vrLeoes.iPosX = 530;
+			break;
+		case 5:
+			vrLeoes.iPosX = 680;
+			break;
+
+		}
+//		vrLeoes.iPosX = vrRand.nextInt(iLargura);
+
+		vrLeoes.iPosY = iAltura -180;
+		vrLeoes.iDirY = -1;
+		vrLeoes.iDirX = (vrRand.nextInt(2) == 0) ? -1 : 1;
+		vrLeoes.fEscalaX = 18;
+		vrLeoes.fEscalaY = 29;
+		vrLeoes.iEspelhamento = (vrLeoes.iDirX > 0) ? CSprite.NORMAL
+				: CSprite.HORIZONTAL;
+		vrLeoes.criaAnimacao(10, true, vrQuadrosLeaoDesce);
+		vrLeoes.criaAnimacao(30, true, vrQuadrosLeaoSobe);
+
+		return vrLeoes;
+	}
+
+	private void atualiLeoes(GL10 vrOpenGL) {
+		// verifica se ja e hora de criar o sprite
+		vrTempoCriacaoLeos.atualiza();
+		if (vrTempoCriacaoLeos.tempoFinalizado()) {
+			vetLeoes.add(criaLeoes(vrOpenGL));
+			vrTempoCriacaoLeos.reiniciaTempo(2000);
+		}
+
+		// Atualiza a pos dos asteroides e remove os asteroies que ja sairam da
+		// tela
+		for (int iIndex = vetLeoes.size() - 1; iIndex >= 0; iIndex--) {
+			
+
+			if ((vetLeoes.get(iIndex).iPosY >= iAltura-180)&&(vetLeoes.get(iIndex).estado ==false)) {
+				vetLeoes.remove(iIndex);
+			}
+			
+			if (vetLeoes.get(iIndex).iPosY < 180){
+				vetLeoes.get(iIndex).estado = false;
+			}
+			
+			if (vetLeoes.get(iIndex).estado) {
+				vetLeoes.get(iIndex).iPosY -= 10;
+				vetLeoes.get(iIndex).iPosX += vetLeoes.get(iIndex).iDirX * 2;
+			}else{
+				vetLeoes.get(iIndex).iPosY += 10;
+				vetLeoes.get(iIndex).iPosX += vetLeoes.get(iIndex).iDirX * 2;
+				 vetLeoes.get(iIndex).configuraAnimcaceoAtual(1);
+
+			}
+		}
+
 	}
 
 	// Metodo utilizado para realizar uma pausa no loop da aplicacao
@@ -434,77 +613,78 @@ class Renderizador implements Renderer {
 		vrSpriteTituloAjuda.desenhaSprite();
 	}
 
-	public void jogo() {
-		vrSpriteFundoJogo.atualizaSprite();
-		vrSpriteFundoJogo.desenhaSprite();
-		vrSpriteJulius.atualizaSprite();
-		vrSpriteJulius.desenhaSprite();
-		vrSpriteLeao3.atualizaSprite();
-		vrSpriteLeao3.desenhaSprite();
+	// public void jogo() {
+	// atualizatelaJogo();
+	// atualizaPersonagem();
+	//
+	// for (int i = 0; i < vetLeos.length; i++) {
+	// atualizaLeao(i);
+	// }
+	//
+	// if (iEstadoAtividade == 0) {
+	// JuliusAnda();
+	// } else {
+	// if (vrSpritechicotada.retornaAnimacaoAtual().animacaoFinalizada()) {
+	// vrSpritechicotada.reiniciaAnimacao();
+	// iEstadoAtividade = 0;
+	// }
+	// vrSpritechicotada.atualizaSprite();
+	// vrSpritechicotada.desenhaSprite();
+	// }
+	// if (iJuliusEstado == 1) {
+	// if (CGerenteEventos.vrEventosTouch.telaClicada() == true) {
+	// vrSpritechicotada.iPosX = (int) CGerenteEventos.vrEventosTouch.fPosX;
+	// vrSpritechicotada.iPosY = iAltura
+	// - ((int) CGerenteEventos.vrEventosTouch.fPosY);
+	// CGerenteSons.vrEfeitos.reproduzSom(1);
+	// System.out.println(1234);
+	//
+	// chicotada();
+	// }
+	// leaoAnda3();
+	// }
+	// }
 
-		if (iEstadoAtividade == 0) {
-			JuliusAnda();
-		} else {
-			if (vrSpritechicotada.retornaAnimacaoAtual().animacaoFinalizada()) {
-				vrSpritechicotada.reiniciaAnimacao();
-				iEstadoAtividade = 0;
-			}
-			vrSpritechicotada.atualizaSprite();
-			vrSpritechicotada.desenhaSprite();
-		}
-		if (iJuliusEstado == 1) {
-			if (CGerenteEventos.vrEventosTouch.telaClicada() == true) {
-				vrSpritechicotada.iPosX = (int) CGerenteEventos.vrEventosTouch.fPosX;
-				vrSpritechicotada.iPosY = iAltura
-						- ((int) CGerenteEventos.vrEventosTouch.fPosY);
-				CGerenteSons.vrEfeitos.reproduzSom(1);
-				System.out.println(1234);
+	// private void leaoAnda3() {
+	// for (int i = 0; i < vetLeos.length; i++) {
+	// if (iLeao3Estado == 0) {
+	// vetLeos[i].iPosY -= 3;
+	// // vrSpriteLeao3.iEspelhamento = 1;
+	//
+	// if (vetLeos[i].iPosY <= 180) {
+	// iLeao3Estado = 1;
+	// vetLeos[i].configuraAnimcaceoAtual(1);
+	//
+	// }
+	// if (vetLeos[i].iPosY <= iAltura - 180) {
+	// if (vetLeos[i].fAlpha <= 1)
+	// vetLeos[i].fAlpha += 0.5f;
+	// }
+	// //
+	// } else {
+	// iLeao3Estado = 1;
+	// vetLeos[i].iPosY += 6;
+	// if (vetLeos[i].iPosY >= iAltura - 180) {
+	// if (vetLeos[i].fAlpha >= 0.4)
+	// vetLeos[i].fAlpha -= 0.5f;
+	// }
+	// // System.out.println(vrRand.nextInt(600));
+	// if (vetLeos[i].iPosY >= (iAltura - 150)) {
+	// iLeao3Estado = 0;
+	// vetLeos[i].configuraAnimcaceoAtual(0);
+	// }
+	//
+	// // vrSpriteJulius.iEspelhamento = 1;
+	// //
+	// // if (vrSpriteJulius.iPosX >= iLargura - 50) {
+	// // iJuliusEstado = 0;
+	// // }
+	// }
+	// }
+	//
+	// }
 
-				chicotada();
-			}
-			leaoAnda3();
-		}
-
-	}
-
-	private void leaoAnda3() {
-		if (iLeao3Estado == 0) {
-			vrSpriteLeao3.iPosY -= 3;
-			// vrSpriteLeao3.iEspelhamento = 1;
-
-			if (vrSpriteLeao3.iPosY <= 180) {
-				iLeao3Estado = 1;
-				vrSpriteLeao3.configuraAnimcaceoAtual(1);
-
-			}
-			if (vrSpriteLeao3.iPosY <= iAltura - 180) {
-				if (vrSpriteLeao3.fAlpha <= 1)
-					vrSpriteLeao3.fAlpha += 0.5f;
-			}
-			//
-		} else {
-			iLeao3Estado = 1;
-			vrSpriteLeao3.iPosY += 6;
-			if (vrSpriteLeao3.iPosY >= iAltura - 180) {
-				if (vrSpriteLeao3.fAlpha >= 0.4)
-					vrSpriteLeao3.fAlpha -= 0.5f;
-			}
-			// System.out.println(vrRand.nextInt(600));
-			if (vrSpriteLeao3.iPosY >= (iAltura - 150)) {
-				iLeao3Estado = 0;
-				vrSpriteLeao3.configuraAnimcaceoAtual(0);
-			}
-
-			// vrSpriteJulius.iEspelhamento = 1;
-			//
-			// if (vrSpriteJulius.iPosX >= iLargura - 50) {
-			// iJuliusEstado = 0;
-			// }
-		}
-
-	}
-
-	private void JuliusAnda() {
+	private void JuliusAnda(GL10 vrOpenGL) {
 		// if (CGerenteEventos.vrEventosTouch.iTipoEventoAtual ==
 		// MotionEvent.ACTION_DOWN) {
 		// if (iJuliusEstado == 0) {
@@ -513,6 +693,7 @@ class Renderizador implements Renderer {
 		// iJuliusEstado = 0;
 		// }
 		// }
+
 		if (iJuliusEstado == 0) {
 			vrSpriteJulius.iPosX += 5;
 			vrSpriteJulius.iEspelhamento = 1;
@@ -522,6 +703,8 @@ class Renderizador implements Renderer {
 				vrSpriteJulius.configuraAnimcaceoAtual(1);
 
 			}
+			atualizatelaJogo();
+			atualizaPersonagem();
 			// if (vrSpriteGato.colide(vrSpriteJulius.iPosX,
 			// vrSpriteJulius.iPosY,
 			// vrSpriteJulius.iLarguraQuadro * vrSpriteJulius.fEscalaX,
@@ -538,18 +721,60 @@ class Renderizador implements Renderer {
 			// if (vrSpriteJulius.iPosX >= iLargura - 50) {
 			// iJuliusEstado = 0;
 			// }
+			iniciaJogo(vrOpenGL);
 		}
 
 	}
 
 	private void chicotada() {
-		if (vrSpriteLeao3.colidePonto(vrSpritechicotada.iPosX, vrSpritechicotada.iPosY)) {
+		for (int i = 0; i < vetLeoes.size(); i++) {
+			if (vetLeoes.get(i).colidePonto(vrSpritechicotada.iPosX,
+					vrSpritechicotada.iPosY)) {
+				// torcaEstadoLeao(i);
+				// iLeao3Estado = 1;
+				 vetLeoes.get(i).configuraAnimcaceoAtual(1);
+				 vetLeoes.get(i).estado=false;
 
-			iLeao3Estado = 1;
-			vrSpriteLeao3.configuraAnimcaceoAtual(1);
-		
+			}
+
+			// iEstadoAtividade = 1;
 		}
-		iEstadoAtividade = 1;
+	}
 
+	//
+	// private void torcaEstadoLeao(int i) {
+	// switch (i) {
+	// case 0:
+	// iLeao0Estado *= -1;
+	// break;
+	// case 1:
+	// iLeao1Estado *= -1;
+	// break;
+	// case 2:
+	// iLeao2Estado *= -1;
+	// break;
+	// case 3:
+	// iLeao3Estado *= -1;
+	// break;
+	// case 4:
+	// iLeao4Estado *= -1;
+	// break;
+	// }
+	//
+	// }
+
+	// private void atualizaLeao(int i) {
+	// vetLeos[i].atualizaSprite();
+	// vetLeos[i].desenhaSprite();
+	// }
+
+	private void atualizaPersonagem() {
+		vrSpriteJulius.atualizaSprite();
+		vrSpriteJulius.desenhaSprite();
+	}
+
+	private void atualizatelaJogo() {
+		vrSpriteFundoJogo.atualizaSprite();
+		vrSpriteFundoJogo.desenhaSprite();
 	}
 }

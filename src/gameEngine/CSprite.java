@@ -3,13 +3,18 @@ package gameEngine;
 import java.util.ArrayList;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.R.bool;
+
 public class CSprite 
 {
 	//Constantes da classe
 	public static final int NORMAL = 0, HORIZONTAL = 1, VERTICAL = 2, VERTICAL_HORIZONTAL = 3;
 	
+	public boolean estado= true;
+	
 	//Atributos puclicos a classe
 	public int iPosX = 0, iPosY = 0;
+	public int iDirX = 0, iDirY = 0;
 	public int iLarguraQuadro = 0, iAlturaQuadro = 0;
 	public int iQuadroAtual = 0;
 	public float fAlpha = 1.0f;
