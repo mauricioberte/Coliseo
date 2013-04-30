@@ -1,9 +1,8 @@
 package gameEngine;
 
 import java.util.ArrayList;
-import javax.microedition.khronos.opengles.GL10;
 
-import android.R.bool;
+import javax.microedition.khronos.opengles.GL10;
 
 public class CSprite 
 {

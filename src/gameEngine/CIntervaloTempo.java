@@ -12,7 +12,7 @@ public class CIntervaloTempo
 	public CIntervaloTempo()
 	{
 		iTempoAtual = 0;
-		iTempoFinal = 1000;
+		iTempoFinal = 2000;
 		vrGerenciadorTempo = CGerenteTempo.retornaGerenteTempo();
 	}
 	
