@@ -399,7 +399,7 @@ class Renderizador implements Renderer {
 
 		// Gerencia os estados do jogo
 		if (iEstado == ABERTURA) {
-			abertura(vrOpenGL);
+			abertura();
 		} else if (iEstado == MENU) {
 			menu();
 		} else if (iEstado == AJUDA) {
