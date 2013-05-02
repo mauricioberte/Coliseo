@@ -35,9 +35,10 @@ public final class R {
         public static final int logo=0x7f02000b;
         public static final int menu=0x7f02000c;
         public static final int menuinicial=0x7f02000d;
-        public static final int sair=0x7f02000e;
-        public static final int splashscreen=0x7f02000f;
-        public static final int uno=0x7f020010;
+        public static final int numbers=0x7f02000e;
+        public static final int sair=0x7f02000f;
+        public static final int splashscreen=0x7f020010;
+        public static final int uno=0x7f020011;
     }
     public static final class id {
         public static final int action_settings=0x7f080000;
