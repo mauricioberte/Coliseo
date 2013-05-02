@@ -72,6 +72,7 @@ class Renderizador implements Renderer {
 	Random vrRand = null;
 	// Constantes da classe
 	final int ABERTURA = 0, MENU = 1, JOGO = 2, AJUDA = 3;
+	boolean finalizaJogo = false;
 
 	// Atributos da classe
 	int iLargura = 0, iAltura = 0;
@@ -91,6 +92,7 @@ class Renderizador implements Renderer {
 	CSprite vrSpriteTitulo2 = null;
 	CSprite vrSpriteTituloAjuda = null;
 	CSprite vetBotoes[] = null;
+	CSprite vetVidas[] = null;
 
 	int vetCodigoSons[];
 	int iJuliusEstado = 0;
@@ -103,6 +105,9 @@ class Renderizador implements Renderer {
 	int unidade = 0;
 	int dezena = 0;
 	int centena = 0;
+	int vida = 5;
+
+	int tempoCriacaoLeoes = 3000;
 
 	ArrayList<CSprite> vetLeoes = null;
 	CIntervaloTempo vrTempoCriacaoLeos = null;
@@ -122,8 +127,9 @@ class Renderizador implements Renderer {
 		vrOpenGL.glClearColor(0, 0, 0, 1);
 
 		// Cria os codigos para os efeitos sonoros
-		vetCodigoSons = new int[1];
+		vetCodigoSons = new int[2];
 		vetCodigoSons[0] = CGerenteSons.vrEfeitos.carregaSom("chicote1.wav");
+		vetCodigoSons[1] = CGerenteSons.vrEfeitos.carregaSom("rugido.wav");
 	}
 
 	// Metodo chamado quando tamanho da tela e alterado
@@ -178,28 +184,28 @@ class Renderizador implements Renderer {
 		vrTempo = new CIntervaloTempo();
 		vrTempo.reiniciaTempo(300);
 
-		vrSpriteSplash = new CSprite(vrOpenGL, R.drawable.splashscreen, 800,
-				600, 800, 600);
+		vrSpriteSplash = new CSprite(vrOpenGL, R.drawable.splashscreen,
+				iLargura, iAltura, iLargura, iAltura);
 		vrSpriteSplash.iPosX = iLargura / 2;
 		vrSpriteSplash.iPosY = iAltura / 2;
-		vrSpriteSplash.fEscalaX = 400;
-		vrSpriteSplash.fEscalaY = 300;
+		vrSpriteSplash.fEscalaX = iLargura / 2;
+		vrSpriteSplash.fEscalaY = iAltura / 2;
 		vrSpriteSplash.fAlpha = 0.0f;
 
-		vrSpriteFundoAzul = new CSprite(vrOpenGL, R.drawable.fundoazul, 800,
-				600, 800, 600);
+		vrSpriteFundoAzul = new CSprite(vrOpenGL, R.drawable.fundoazul,
+				iLargura, iAltura, iLargura, iAltura);
 		vrSpriteFundoAzul.iPosX = iLargura;
 		vrSpriteFundoAzul.iPosY = iAltura;
-		vrSpriteFundoAzul.fEscalaX = 400;
-		vrSpriteFundoAzul.fEscalaY = 300;
+		vrSpriteFundoAzul.fEscalaX = iLargura / 2;
+		vrSpriteFundoAzul.fEscalaY = iAltura / 2;
 		vrSpriteFundoAzul.fAlpha = 0.0f;
 
-		vrSpriteFundoJogo = new CSprite(vrOpenGL, R.drawable.fundojogo, 800,
-				600, 800, 600);
+		vrSpriteFundoJogo = new CSprite(vrOpenGL, R.drawable.fundojogo,
+				iLargura, iAltura, iLargura, iAltura);
 		vrSpriteFundoJogo.iPosX = iLargura / 2;
 		vrSpriteFundoJogo.iPosY = iAltura / 2;
-		vrSpriteFundoJogo.fEscalaX = 400;
-		vrSpriteFundoJogo.fEscalaY = 300;
+		vrSpriteFundoJogo.fEscalaX = iLargura / 2;
+		vrSpriteFundoJogo.fEscalaY = iAltura / 2;
 
 		vrSpriteTitulo = new CSprite(vrOpenGL, R.drawable.logo, 512, 256, 512,
 				256);
@@ -208,12 +214,12 @@ class Renderizador implements Renderer {
 		vrSpriteTitulo.fEscalaX = 144;
 		vrSpriteTitulo.fEscalaY = 64;
 
-		vrSpriteMenu = new CSprite(vrOpenGL, R.drawable.menuinicial, 800, 600,
-				800, 600);
+		vrSpriteMenu = new CSprite(vrOpenGL, R.drawable.menuinicial, iLargura,
+				iAltura, iLargura, iAltura);
 		vrSpriteMenu.iPosX = iLargura / 2;
 		vrSpriteMenu.iPosY = iAltura / 2;
-		vrSpriteMenu.fEscalaX = 400;
-		vrSpriteMenu.fEscalaY = 300;
+		vrSpriteMenu.fEscalaX = iLargura / 2;
+		vrSpriteMenu.fEscalaY = iAltura / 2;
 
 		vrSpriteTitulo2 = new CSprite(vrOpenGL, R.drawable.sair, 512, 256, 512,
 				256);
@@ -296,10 +302,34 @@ class Renderizador implements Renderer {
 			vetBotoes[iIndex].criaAnimacao(1, false, vrQuadro1);
 			vetBotoes[iIndex].criaAnimacao(1, false, vrQuadro2);
 			vetBotoes[iIndex].iPosX = iLargura / 2;
-			vetBotoes[iIndex].iPosY = iAltura - 270 - iIndex * 50;
+			vetBotoes[iIndex].iPosY = iAltura - iAltura / 2 - iIndex * 50;
 			vetBotoes[iIndex].fEscalaX = 64;
 			vetBotoes[iIndex].fEscalaY = 21;
 			vetBotoes[iIndex].configuraAnimcaceoAtual(0);
+		}
+
+		// Cria o vetor de sprites
+		vetVidas = new CSprite[5];
+
+		// Cria os quadros da animacao
+		CQuadro[] vrQuadroVidas = new CQuadro[1];
+		vrQuadroVidas[0] = new CQuadro(0);
+
+		vetVidas[0] = new CSprite(vrOpenGL, R.drawable.julius, 30, 64, 192, 256);
+		vetVidas[1] = new CSprite(vrOpenGL, R.drawable.julius, 30, 64, 192, 256);
+		vetVidas[2] = new CSprite(vrOpenGL, R.drawable.julius, 30, 64, 192, 256);
+		vetVidas[3] = new CSprite(vrOpenGL, R.drawable.julius, 30, 64, 192, 256);
+		vetVidas[4] = new CSprite(vrOpenGL, R.drawable.julius, 30, 64, 192, 256);
+
+		// Configura a escala, as animacoes e posicao de cada botao
+		for (int iIndex = 0; iIndex < 5; iIndex++) {
+			vetVidas[iIndex].iPosY = 30;
+			vetVidas[iIndex].iPosX = ((iLargura / 6) * 4) + iIndex * 20;
+			// vrLeoes.iDirX = (vrRand.nextInt(2) == 0) ? -1 : 1;
+			vetVidas[iIndex].fEscalaX = 9;
+			vetVidas[iIndex].fEscalaY = 15;
+			vetVidas[iIndex].fAlpha = 1.0f;
+			vetVidas[iIndex].criaAnimacao(1, false, vrQuadroVidas);
 		}
 
 		vetLeoes = new ArrayList<CSprite>();
@@ -417,22 +447,33 @@ class Renderizador implements Renderer {
 	}
 
 	private void iniciaJogo(GL10 vrOpenGL) {
-		atualiLeoes(vrOpenGL);
-		atualizatelaJogo();
-		atualizaPersonagem();
-
-		desenhaLeoes();
-		atualizaPontuacao();
-
-		if (CGerenteEventos.vrEventosTouch.telaClicada() == true) {
-			chicotada();
+		if (!finalizaJogo) {
+			atualiLeoes(vrOpenGL);
+			atualizatelaJogo();
+			atualizaPersonagem();
+			desenhaLeoes();
+			atualizaPontuacao();
+			atualizaVidas();	
+			if (CGerenteEventos.vrEventosTouch.telaClicada() == true) {
+				chicotada();
+			}
+		} else {
+			// menu();
 		}
 	}
 
+	private void atualizaVidas() {
+		for (int i = 0; i < 5; i++) {
+			vetVidas[i].atualizaSprite();
+			vetVidas[i].desenhaSprite();
+		}		
+	}
+
 	private void atualizaPontuacao() {
-		if ((unidade%10 == 0)&&(unidade>0)) {
+		if ((unidade % 10 == 0) && (unidade > 0)) {
 			unidade = 0;
 			dezena++;
+			tempoCriacaoLeoes = tempoCriacaoLeoes - 300;
 		}
 		vrSpriteNumeros.configuraAnimcaceoAtual(unidade);
 		vrSpritePontuacao.configuraAnimcaceoAtual(dezena);
@@ -474,12 +515,12 @@ class Renderizador implements Renderer {
 			vrLeoes.fAngulo = -15;
 			break;
 		case 1:
-			vrLeoes.iPosX = 115;
+			vrLeoes.iPosX = 105;
 			vrLeoes.iDirX = -6;
 			vrLeoes.fAngulo = 15;
 			break;
 		case 2:
-			vrLeoes.iPosX = 260;
+			vrLeoes.iPosX = 255;
 			vrLeoes.iDirX = -3;
 			vrLeoes.fAngulo = 2;
 			break;
@@ -488,7 +529,7 @@ class Renderizador implements Renderer {
 			vrLeoes.iDirX = 0;
 			break;
 		case 4:
-			vrLeoes.iPosX = 540;
+			vrLeoes.iPosX = 545;
 			vrLeoes.iDirX = 3;
 			vrLeoes.fAngulo = -2;
 			break;
@@ -515,7 +556,7 @@ class Renderizador implements Renderer {
 		vrTempoCriacaoLeos.atualiza();
 		if (vrTempoCriacaoLeos.tempoFinalizado()) {
 			vetLeoes.add(criaLeoes(vrOpenGL));
-			vrTempoCriacaoLeos.reiniciaTempo(3000);
+			vrTempoCriacaoLeos.reiniciaTempo(tempoCriacaoLeoes);
 		}
 
 		// Atualiza a pos dos asteroides e remove os asteroies que ja sairam da
@@ -549,7 +590,13 @@ class Renderizador implements Renderer {
 	}
 
 	private void mordida() {
-
+		vida--;
+		CGerenteSons.vrEfeitos.reproduzSom(vetCodigoSons[1]);
+		if (vida != 0) {
+			vetVidas[vida].fAlpha = 0.3f;
+		} else {
+			finalizaJogo = true;
+		}
 	}
 
 	// Metodo utilizado para realizar uma pausa no loop da aplicacao
@@ -673,11 +720,11 @@ class Renderizador implements Renderer {
 		}
 		for (int i = 0; i < vetLeoes.size(); i++) {
 			if (vetLeoes.get(i).colidePonto(
-					(int) CGerenteEventos.vrEventosTouch.fPosX,
+					(int) CGerenteEventos.vrEventosTouch.fPosX - 10,
 					iAltura - ((int) CGerenteEventos.vrEventosTouch.fPosY))
 					&& (vetLeoes.get(i).estado == true)) {
 				vetLeoes.get(i).estado = false;
-				vetLeoes.get(i).fAlpha=0.5f;
+				vetLeoes.get(i).fAlpha = 0.5f;
 				acertouLeao();
 			}
 		}
