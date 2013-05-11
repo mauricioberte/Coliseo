@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package unochapeco.jogos.desafiomenu;
+package br.com.noisquefez.coliseo;
 
 public final class R {
     public static final class attr {

@@ -1,5 +1,5 @@
 //Pacote da aplicacao
-package unochapeco.jogos.desafiomenu;
+package br.com.noisquefez.coliseo;
 
 //Pacotes utilizados
 import gameEngine.CGerenteEventos;
@@ -25,9 +25,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import br.com.noisquefez.coliseo.R;
 
 //Classe que implementa a atividade principal da aplicacao Android
-public class DesafioMenuActivity extends Activity {
+public class ColiseoActivity extends Activity {
 	GLSurfaceView vrSuperficieDesenho = null;
 
 	// Metodo chamado no momento da criacao da Activity
@@ -334,8 +335,7 @@ class Renderizador implements Renderer {
 
 		vetLeoes = new ArrayList<CSprite>();
 
-		// Cria o objeto temporizador para criacao de asteroides e controle
-		// tempo de tiro
+		// Cria o objeto temporizador para criacao dos Leos 
 		vrTempoCriacaoLeos = new CIntervaloTempo();
 		vrTempoCriacaoLeos.reiniciaTempo(1000);
 
@@ -386,7 +386,7 @@ class Renderizador implements Renderer {
 		vrSpriteNumeros = new CSprite(vrOpenGL, R.drawable.numbers, 100, 100,
 				1000, 300);
 		vrSpriteNumeros.iPosX = 160;
-		vrSpriteNumeros.iPosY = 10;
+		vrSpriteNumeros.iPosY = 30;
 		vrSpriteNumeros.fEscalaX = 20;
 		vrSpriteNumeros.fEscalaY = 20;
 		vrSpriteNumeros.criaAnimacao(1, false, vrQuadrosNumero0);
@@ -404,7 +404,7 @@ class Renderizador implements Renderer {
 		vrSpritePontuacao = new CSprite(vrOpenGL, R.drawable.numbers, 100, 100,
 				1000, 300);
 		vrSpritePontuacao.iPosX = 120;
-		vrSpritePontuacao.iPosY = 10;
+		vrSpritePontuacao.iPosY = 30;
 		vrSpritePontuacao.fEscalaX = 20;
 		vrSpritePontuacao.fEscalaY = 20;
 		vrSpritePontuacao.criaAnimacao(1, false, vrQuadrosNumero0);
@@ -458,7 +458,7 @@ class Renderizador implements Renderer {
 				chicotada();
 			}
 		} else {
-			// menu();
+			 menu();
 		}
 	}
 
@@ -559,7 +559,7 @@ class Renderizador implements Renderer {
 			vrTempoCriacaoLeos.reiniciaTempo(tempoCriacaoLeoes);
 		}
 
-		// Atualiza a pos dos asteroides e remove os asteroies que ja sairam da
+		// Atualiza a pos dos Leoes e remove os leoes que ja sairam da
 		// tela
 		for (int iIndex = vetLeoes.size() - 1; iIndex >= 0; iIndex--) {
 

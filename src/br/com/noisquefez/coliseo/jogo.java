@@ -1,4 +1,4 @@
-package unochapeco.jogos.desafiomenu;
+package br.com.noisquefez.coliseo;
 
 public class jogo {
 	
