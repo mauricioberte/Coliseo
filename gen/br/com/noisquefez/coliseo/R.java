@@ -21,24 +21,29 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ajuda=0x7f020000;
-        public static final int briga=0x7f020001;
-        public static final int buldogue=0x7f020002;
-        public static final int fundoazul=0x7f020003;
-        public static final int fundojogo=0x7f020004;
-        public static final int ic_launcher=0x7f020005;
-        public static final int jogar=0x7f020006;
-        public static final int julius=0x7f020007;
-        public static final int leao=0x7f020008;
-        public static final int leao3=0x7f020009;
-        public static final int lion=0x7f02000a;
-        public static final int logo=0x7f02000b;
-        public static final int menu=0x7f02000c;
-        public static final int menuinicial=0x7f02000d;
-        public static final int numbers=0x7f02000e;
-        public static final int sair=0x7f02000f;
-        public static final int splashscreen=0x7f020010;
-        public static final int uno=0x7f020011;
+        public static final int acrgladiator=0x7f020000;
+        public static final int ajuda=0x7f020001;
+        public static final int briga=0x7f020002;
+        public static final int buldogue=0x7f020003;
+        public static final int creditos=0x7f020004;
+        public static final int fundoazul=0x7f020005;
+        public static final int fundojogo=0x7f020006;
+        public static final int gameover=0x7f020007;
+        public static final int ic_launcher=0x7f020008;
+        public static final int jogar=0x7f020009;
+        public static final int julius=0x7f02000a;
+        public static final int leao=0x7f02000b;
+        public static final int leao3=0x7f02000c;
+        public static final int lion=0x7f02000d;
+        public static final int logo=0x7f02000e;
+        public static final int menu=0x7f02000f;
+        public static final int menuinicial=0x7f020010;
+        public static final int numbers=0x7f020011;
+        public static final int pausa=0x7f020012;
+        public static final int sair=0x7f020013;
+        public static final int splashscreen=0x7f020014;
+        public static final int uno=0x7f020015;
+        public static final int vitoria=0x7f020016;
     }
     public static final class id {
         public static final int action_settings=0x7f080000;

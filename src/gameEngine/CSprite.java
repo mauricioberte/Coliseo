@@ -10,6 +10,7 @@ public class CSprite
 	public static final int NORMAL = 0, HORIZONTAL = 1, VERTICAL = 2, VERTICAL_HORIZONTAL = 3;
 	
 	public boolean estado= true;
+	public boolean mordeu =false;
 	
 	//Atributos puclicos a classe
 	public int iPosX = 0, iPosY = 0;
