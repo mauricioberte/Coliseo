@@ -75,7 +75,6 @@ class Renderizador implements Renderer {
 	// Constantes da classe
 	final int ABERTURA = 0, MENU = 1, JOGO = 2, AJUDA = 3, PAUSA = 4,
 			VITORIA = 5;
-	
 
 	// Atributos da classe
 	int iLargura = 0, iAltura = 0;
@@ -120,7 +119,7 @@ class Renderizador implements Renderer {
 	int centena = 0;
 	int vida = 5;
 	int tempoCriacaoLeoes = 3000;
-	int temppoDePausa = 50;
+	int temppoDePausa = 100;
 
 	ArrayList<CSprite> vetLeoes = null;
 	CIntervaloTempo vrTempoCriacaoLeos = null;
@@ -478,7 +477,7 @@ class Renderizador implements Renderer {
 
 		btnBack = new CSprite(vrOpenGL, R.drawable.btnback, 128, 42, 128, 128);
 		btnBack.iPosX = (iLargura / 2);
-		btnBack.iPosY = iAltura / 2 - 70;
+		btnBack.iPosY = iAltura / 4;
 		btnBack.fEscalaX = 64;
 		btnBack.fEscalaY = 21;
 
@@ -571,7 +570,7 @@ class Renderizador implements Renderer {
 				iniciaJogo();
 				finalizaJogo = false;
 			}
-			
+
 		}
 		if (iEstado == JOGO) {
 			chicotada();
@@ -609,8 +608,8 @@ class Renderizador implements Renderer {
 		if ((unidade % 10 == 0) && (unidade > 0)) {
 			unidade = 0;
 			dezena++;
-			tempoCriacaoLeoes = tempoCriacaoLeoes - 300;
-			temppoDePausa -= 10;
+			tempoCriacaoLeoes = tempoCriacaoLeoes - 150;
+			temppoDePausa -= 6;
 		}
 		vrSpriteNumeros.configuraAnimcaceoAtual(unidade);
 		vrSpritePontuacao.configuraAnimcaceoAtual(dezena);
@@ -699,43 +698,48 @@ class Renderizador implements Renderer {
 		// Atualiza a pos dos Leoes e remove os leoes que ja sairam da
 		// tela
 		for (int iIndex = vetLeoes.size() - 1; iIndex >= 0; iIndex--) {
+			if (vetLeoes.get(iIndex).mordeu == false) {
+				if (vetLeoes.get(iIndex).iPosY < 180) {
+					vetLeoes.get(iIndex).estado = false;
+					vetLeoes.get(iIndex).fAlpha = 0.0f;
+					vetLeoes.get(iIndex).mordeu = true;
+					mordida();
+				}
+				if (vetLeoes.get(iIndex).estado) {
+					vetLeoes.get(iIndex).iPosY -= 10;
+					vetLeoes.get(iIndex).iPosX -= vetLeoes.get(iIndex).iDirX * 2;
+					vetLeoes.get(iIndex).fAlpha += 0.5;
+				} else {
+					vetLeoes.get(iIndex).iPosY += 10;
+					vetLeoes.get(iIndex).iPosX += vetLeoes.get(iIndex).iDirX * 2;
+					vetLeoes.get(iIndex).configuraAnimcaceoAtual(1);
+				}
 
-			if (vetLeoes.get(iIndex).iPosY < 180) {
-				vetLeoes.get(iIndex).estado = false;
-				vetLeoes.get(iIndex).fAlpha = 0.0f;
-				vetLeoes.get(iIndex).mordeu = true;
-				mordida();
-			}
-			if (vetLeoes.get(iIndex).estado) {
-				vetLeoes.get(iIndex).iPosY -= 10;
-				vetLeoes.get(iIndex).iPosX -= vetLeoes.get(iIndex).iDirX * 2;
-				vetLeoes.get(iIndex).fAlpha += 0.5;
+				if (vetLeoes.get(iIndex).iPosY >= iAltura - 200) {
+					vetLeoes.get(iIndex).fAlpha -= 0.5;
+				}
+				if (iIndex <= 1) {
+					if ((vetLeoes.get(iIndex).iPosY >= iAltura - 195)
+							&& (vetLeoes.get(iIndex).estado == false)) {
+						vetLeoes.remove(iIndex);
+					}
+				} else {
+					if ((vetLeoes.get(iIndex).iPosY >= iAltura - 180)
+							&& (vetLeoes.get(iIndex).estado == false)) {
+						vetLeoes.remove(iIndex);
+					}
+				}
 			} else {
-				vetLeoes.get(iIndex).iPosY += 10;
-				vetLeoes.get(iIndex).iPosX += vetLeoes.get(iIndex).iDirX * 2;
-				vetLeoes.get(iIndex).configuraAnimcaceoAtual(1);
-
-			}
-			if (vetLeoes.get(iIndex).mordeu == true) {
-				if (vetLeoes.get(iIndex).iPosY >= iAltura - 230) {
+				vetLeoes.get(iIndex).libraOsso--;
+				//
+				// if (vetLeoes.get(iIndex).iPosY >= iAltura - 230) {
+				// vetLeoes.get(iIndex).fAlpha = 0.9f;
+				// vetLeoes.get(iIndex).iPosX = iLargura / 2;
+				// vetLeoes.get(iIndex).iPosY = 182;
+				//
+				if (vetLeoes.get(iIndex).libraOsso == 0) {
 					vetLeoes.get(iIndex).fAlpha = 0.9f;
-					vetLeoes.get(iIndex).iPosX = iLargura / 2;
-					vetLeoes.get(iIndex).iPosY = 182;
 					vetLeoes.get(iIndex).mordeu = false;
-				}
-			}
-			if (vetLeoes.get(iIndex).iPosY >= iAltura - 200) {
-				vetLeoes.get(iIndex).fAlpha -= 0.5;
-			}
-			if (iIndex <= 1) {
-				if ((vetLeoes.get(iIndex).iPosY >= iAltura - 195)
-						&& (vetLeoes.get(iIndex).estado == false)) {
-					vetLeoes.remove(iIndex);
-				}
-			} else {
-				if ((vetLeoes.get(iIndex).iPosY >= iAltura - 180)
-						&& (vetLeoes.get(iIndex).estado == false)) {
-					vetLeoes.remove(iIndex);
 				}
 			}
 		}

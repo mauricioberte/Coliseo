@@ -21,6 +21,7 @@ public class CSprite
 	public float fAngulo = 0.0f;
 	public float fEscalaX = 1.0f, fEscalaY = 1.0f;
 	public int iEspelhamento = NORMAL;
+	public int libraOsso = 8;
 	
 	//Atributos privados da classe
 	private ArrayList<CAnimacao> vetAnimacoes = null;
