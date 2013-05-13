@@ -57,6 +57,7 @@ public class ColiseoActivity extends Activity {
 	public void onPause() {
 		super.onPause();
 		vrSuperficieDesenho.onPause();
+		CGerenteGrafico.release();
 		CGerenteSons.vrMusica.pausaMusica();
 	}
 
@@ -64,6 +65,8 @@ public class ColiseoActivity extends Activity {
 	public void onResume() {
 		super.onResume();
 		vrSuperficieDesenho.onResume();
+		CGerenteSons.vrMusica.reproduzMusica();
+
 	}
 }
 
@@ -97,6 +100,8 @@ class Renderizador implements Renderer {
 	CSprite vetBotoes[] = null;
 	CSprite vetVidas[] = null;
 
+	CSprite btnPausa = null;
+
 	int vetCodigoSons[];
 	int iJuliusEstado = 0;
 	int iEstadoAtividade = 0;
@@ -111,6 +116,8 @@ class Renderizador implements Renderer {
 	int vida = 5;
 
 	int tempoCriacaoLeoes = 3000;
+
+	int temppoDePausa = 10;
 
 	ArrayList<CSprite> vetLeoes = null;
 	CIntervaloTempo vrTempoCriacaoLeos = null;
@@ -130,9 +137,11 @@ class Renderizador implements Renderer {
 		vrOpenGL.glClearColor(0, 0, 0, 1);
 
 		// Cria os codigos para os efeitos sonoros
-		vetCodigoSons = new int[2];
+		vetCodigoSons = new int[3];
 		vetCodigoSons[0] = CGerenteSons.vrEfeitos.carregaSom("chicote1.wav");
 		vetCodigoSons[1] = CGerenteSons.vrEfeitos.carregaSom("rugido.wav");
+		vetCodigoSons[2] = CGerenteSons.vrEfeitos.carregaSom("grito1.wav");
+
 	}
 
 	// Metodo chamado quando tamanho da tela e alterado
@@ -438,6 +447,12 @@ class Renderizador implements Renderer {
 		vrSpriteTelaFinal.fEscalaX = 240;
 		vrSpriteTelaFinal.fEscalaY = 125;
 
+		btnPausa = new CSprite(vrOpenGL, R.drawable.sair, 128, 42, 128, 128);
+		btnPausa.iPosX = iLargura / 2;
+		btnPausa.iPosY = 20;
+		btnPausa.fEscalaX = 64;
+		btnPausa.fEscalaY = 21;
+
 	}
 
 	// Metodo chamado quempre que possivel para realizar o desenho grafico na
@@ -456,35 +471,59 @@ class Renderizador implements Renderer {
 		} else if (iEstado == JOGO) {
 			JuliusAnda(vrOpenGL);
 		}
-
 		// Executa as etapas de um jogo
 		CGerenteTempo.atualiza();
 		CGerenteEventos.vrEventosTouch.atualizaEstados();
-
 		// Pausa no loop da aplicacao
 		pausa();
 	}
 
-	private void iniciaJogo(GL10 vrOpenGL) {
+	private void jogo(GL10 vrOpenGL) {
+		if (CGerenteEventos.vrEventosTouch.telaClicada() == true) {
+			trataClique();
+		}
 		if (!finalizaJogo) {
 			if (!pausaJogo) {
-				if (CGerenteEventos.vrEventosTouch.fPosY < 100) {
-					pausaJogo = true;
-				} else {
-					if (CGerenteEventos.vrEventosTouch.telaClicada() == true) {
-						chicotada();
-					}
-					atualiLeoes(vrOpenGL);
-					atualizatelaJogo();
-					atualizaPersonagem();
-					desenhaLeoes();
-					atualizaPontuacao();
-					atualizaVidas();
-					atualizaChicotada();
-				}
+				// if (btnPausa.colidePonto(
+				// (int) CGerenteEventos.vrEventosTouch.fPosX, iAltura
+				// - ((int) CGerenteEventos.vrEventosTouch.fPosY))) {
+				// pausaJogo = false;
+				// }
+				atualiLeoes(vrOpenGL);
+				atualizatelaJogo();
+				atualizaPersonagem();
+				desenhaLeoes();
+				atualizaPontuacao();
+				atualizaVidas();
+				atualizaChicotada();
+			} else {
+				atualizaPausa();
 			}
 		} else {
 			terminaJogo();
+		}
+	}
+
+	private void atualizaPausa() {
+		vrSpriteTituloPausa.desenhaSprite();
+		vrSpriteTituloPausa.atualizaSprite();
+	}
+
+	private void trataClique() {
+		if (btnPausa.colidePonto(
+				(int) CGerenteEventos.vrEventosTouch.fPosX - 10, iAltura
+						- ((int) CGerenteEventos.vrEventosTouch.fPosY))) {
+			pausaJogo = true;
+		} else {
+			if (finalizaJogo == true) {
+				finalizaJogo = false;
+				menu();
+				zeraVariaveis();
+				iniciaJogo();
+			}
+			pausaJogo = false;
+
+			chicotada();
 		}
 	}
 
@@ -492,14 +531,11 @@ class Renderizador implements Renderer {
 		if (vida == 0) {
 			vrSpriteTelaFinalGamoOver.atualizaSprite();
 			vrSpriteTelaFinalGamoOver.desenhaSprite();
+			
 		} else {
 			vrSpriteTelaFinal.atualizaSprite();
 			vrSpriteTelaFinal.desenhaSprite();
 		}
-//		vrSpriteNumeros.atualizaSprite();
-//		vrSpriteNumeros.desenhaSprite();
-//		vrSpritePontuacao.atualizaSprite();
-//		vrSpritePontuacao.desenhaSprite();
 	}
 
 	private void atualizaVidas() {
@@ -514,6 +550,7 @@ class Renderizador implements Renderer {
 			unidade = 0;
 			dezena++;
 			tempoCriacaoLeoes = tempoCriacaoLeoes - 300;
+			temppoDePausa -= 10;
 		}
 		vrSpriteNumeros.configuraAnimcaceoAtual(unidade);
 		vrSpritePontuacao.configuraAnimcaceoAtual(dezena);
@@ -647,9 +684,9 @@ class Renderizador implements Renderer {
 
 	private void mordida() {
 		vrSpritechicotada.iPosX = iLargura / 2;
-		vrSpritechicotada.iPosY = 160;
-		vrSpritechicotada.fEscalaX = 50;
-		vrSpritechicotada.fEscalaY = 50;
+		vrSpritechicotada.iPosY = 150;
+		vrSpritechicotada.fEscalaX = 60;
+		vrSpritechicotada.fEscalaY = 60;
 		vrSpritechicotada.configuraAnimcaceoAtual(0);
 		if (vrSpritechicotada.retornaAnimacaoAtual().animacaoFinalizada()) {
 			vrSpritechicotada.reiniciaAnimacao();
@@ -659,6 +696,8 @@ class Renderizador implements Renderer {
 		if (vida != 0) {
 			vetVidas[vida].fAlpha = 0.3f;
 		} else {
+			CGerenteSons.vrEfeitos.reproduzSom(vetCodigoSons[2]);
+			CGerenteSons.vrMusica.pausaMusica();
 			finalizaJogo = true;
 		}
 	}
@@ -666,7 +705,7 @@ class Renderizador implements Renderer {
 	// Metodo utilizado para realizar uma pausa no loop da aplicacao
 	private void pausa() {
 		try {
-			Thread.sleep(100);
+			Thread.sleep(temppoDePausa);
 		} catch (Exception e) {
 
 		}
@@ -686,8 +725,8 @@ class Renderizador implements Renderer {
 			vrSpriteSplash.fAlpha -= 0.03f;
 			if (vrSpriteSplash.fAlpha <= 0.0f) {
 				// Carrega uma musica de fundo
-				CGerenteSons.vrMusica.carregaMusica("menu.mid", true);
-				CGerenteSons.vrMusica.reproduzMusica();
+				// CGerenteSons.vrMusica.carregaMusica("menu.mid", true);
+				// CGerenteSons.vrMusica.reproduzMusica();
 
 				iEstado = MENU;
 			}
@@ -728,8 +767,10 @@ class Renderizador implements Renderer {
 							vrActivity.finish();
 						}
 						if (iIndex == 0) {
-							CGerenteSons.vrMusica.carregaMusica("rugido.wav",
-									false);
+							CGerenteSons.vrEfeitos
+									.reproduzSom(vetCodigoSons[1]);
+							CGerenteSons.vrMusica.carregaMusica("musica.mid",
+									true);
 							CGerenteSons.vrMusica.reproduzMusica();
 							iEstado = JOGO;
 						}
@@ -754,21 +795,22 @@ class Renderizador implements Renderer {
 	}
 
 	private void JuliusAnda(GL10 vrOpenGL) {
-
 		if (iJuliusEstado == 0) {
+			vrSpriteJulius.configuraAnimcaceoAtual(0);
 			vrSpriteJulius.iPosX += 5;
 			vrSpriteJulius.iEspelhamento = 1;
 
 			if (vrSpriteJulius.iPosX >= iLargura / 2) {
 				iJuliusEstado = 1;
 				vrSpriteJulius.configuraAnimcaceoAtual(1);
-
+				temppoDePausa = 100;
+				iniciaJogo();
 			}
 			atualizatelaJogo();
 			atualizaPersonagem();
 		} else {
 			iJuliusEstado = 1;
-			iniciaJogo(vrOpenGL);
+			jogo(vrOpenGL);
 		}
 
 	}
@@ -799,8 +841,8 @@ class Renderizador implements Renderer {
 	private void acertouLeao() {
 		leaoMorto++;
 		unidade++;
-		if(dezena >0){
-			finalizaJogo= true;
+		if (dezena > 9) {
+			finalizaJogo = true;
 		}
 	}
 
@@ -819,5 +861,27 @@ class Renderizador implements Renderer {
 	private void atualizatelaJogo() {
 		vrSpriteFundoJogo.atualizaSprite();
 		vrSpriteFundoJogo.desenhaSprite();
+		btnPausa.atualizaSprite();
+		btnPausa.desenhaSprite();
+	}
+
+	public void iniciaJogo() {
+		vida = 5;
+		for (int i = 0; i < 5; i++) {
+			vetVidas[i].fAlpha = 1;
+		}
+//		zeraVariaveis();
+	}
+
+	public void zeraVariaveis() {
+		unidade = 0;
+		dezena = 0;
+		leaoMorto=0;
+		centena = 0;
+		tempoCriacaoLeoes = 3000;
+		temppoDePausa = 100;
+		iJuliusEstado=0;
+		vrSpriteJulius.iPosX=0;
+		vetLeoes.removeAll(vetLeoes)	;	
 	}
 }
